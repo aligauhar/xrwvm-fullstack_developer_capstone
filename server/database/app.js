@@ -58,18 +58,42 @@ app.get('/fetchReviews/dealer/:id', async (req, res) => {
 
 // Express route to fetch all dealerships
 app.get('/fetchDealers', async (req, res) => {
-//Write your code here
-});
-
+    try {
+      const dealerships = await Dealerships.find();
+      res.json(dealerships);
+    } catch (error) {
+      res.status(500).json({ error: 'Error fetching dealerships' });
+    }
+  });
+  
+// Express route to fetch Dealers by a particular state
 // Express route to fetch Dealers by a particular state
 app.get('/fetchDealers/:state', async (req, res) => {
-//Write your code here
-});
-
+    const state = req.params.state;  // Get state from request parameters
+    try {
+      const dealerships = await Dealerships.find({ state: state });
+      res.json(dealerships);
+    } catch (error) {
+      res.status(500).json({ error: 'Error fetching dealerships by state' });
+    }
+  });
+  
+// Express route to fetch dealer by a particular id
 // Express route to fetch dealer by a particular id
 app.get('/fetchDealer/:id', async (req, res) => {
-//Write your code here
-});
+    const id = req.params.id;  // Get ID from request parameters
+    try {
+      const dealership = await Dealerships.findById(id);
+      if (dealership) {
+        res.json(dealership);
+      } else {
+        res.status(404).json({ error: 'Dealership not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Error fetching dealership by ID' });
+    }
+  });
+  
 
 //Express route to insert review
 app.post('/insert_review', express.raw({ type: '*/*' }), async (req, res) => {
